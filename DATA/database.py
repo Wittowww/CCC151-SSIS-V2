@@ -1,11 +1,16 @@
 import mysql.connector
-from config import DB_HOST, DB_USER, DB_PASSWORD, DB_NAME
+from mysql.connector import pooling
+from config import DB_CONFIG
+
+try:
+    connection_pool = mysql.connector.pooling.MySQLConnectionPool(
+        pool_name = "student_management_pool",
+        pool_size = 5,
+        **DB_CONFIG
+    )
+except mysql.connector.Error as err:
+    print(f"Error creating connection pool: {err}")
+    connection_pool = None
 
 def GetConnection():
-    connection = mysql.connector.connect(
-        host = DB_HOST,
-        user = DB_USER,
-        password = DB_PASSWORD, 
-        database = DB_NAME
-    ) 
-    return connection 
+    return connection_pool.GETConnection() 
