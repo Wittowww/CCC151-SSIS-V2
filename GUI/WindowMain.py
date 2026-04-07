@@ -6,7 +6,7 @@ from PySide6.QtCore import Qt
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-from USERVIEW.DataTable import StudentTable
+from USERVIEW.DataTable import StudentsTable
 from USERVIEW.DataTable import ProgramTable
 from USERVIEW.DataTable import CollegeTable
 
@@ -62,7 +62,7 @@ class mainApp(QMainWindow):
         TablePage.setMinimumHeight(580)
 
 
-        TablePage.addWidget((StudentTable()))
+        TablePage.addWidget((StudentsTable()))
         TablePage.addWidget((ProgramTable()))
         TablePage.addWidget((CollegeTable()))
 
