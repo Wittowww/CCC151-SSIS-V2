@@ -13,4 +13,4 @@ except mysql.connector.Error as err:
     connection_pool = None
 
 def GetConnection():
-    return connection_pool.GETConnection() 
+    return connection_pool.get_connection() 

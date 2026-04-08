@@ -121,13 +121,13 @@ def get_all_students():
         cursor.execute ("""
             SELECT 
                 s.id,
-                s.students_id,
+                s.student_id,
                 s.first_name,
                 s.last_name,
                 s.gender,
                 s.year,
                 p.program_code
-            FROM student s
+            FROM students s
             JOIN program p ON s.program_code = p.program_code
         """)
         return cursor.fetchall()

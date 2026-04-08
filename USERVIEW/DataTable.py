@@ -1,5 +1,5 @@
 from PySide6.QtWidgets import (
-    QWidget, QTableWidget, QTableWidgetItem, QVBoxLayout, QHBoxLayout, QPushButton, QLineEdit, QLabel, QHeaderView, QMessageBox,QMenu
+    QWidget, QTableWidget, QTableWidgetItem, QVBoxLayout, QHeaderView, QMessageBox,QMenu
     )
 from PySide6.QtCore import Qt
 
@@ -12,6 +12,8 @@ from USERVIEW.AddEdit import (
     EditCollegeDialog, EditProgramDialog, EditStudentDialog
     )
 
+
+#COLLEGE FUNCTIONS
 class CollegeTable(QWidget):
     def __init__(self):
         super().__init__()
@@ -24,7 +26,7 @@ class CollegeTable(QWidget):
         self.collegeTable.setColumnCount(3)
         self.collegeTable.setHorizontalHeaderLabels(["no.", "College Name", "College Code"])
         self.collegeTable.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
-        self.load_college_data()
+        self.load_collegeTable()
 
         self.collegeTable.setContextMenuPolicy(Qt.CustomContextMenu)
         self.collegeTable.customContextMenuRequested.connect(self.show_contextMenu)
@@ -91,7 +93,7 @@ class ProgramTable(QWidget):
         self.programTable.setColumnCount(4)
         self.programTable.setHorizontalHeaderLabels(["no.","Program Code", "Program Name", "College ID"])
         self.programTable.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
-        self.load_program_data()
+        self.load_programTable()
 
         self.programTable.setContextMenuPolicy(Qt.CustomContextMenu)
         self.programTable.customContextMenuRequested.connect(self.show_contextMenu)
@@ -173,10 +175,10 @@ class StudentsTable(QWidget):
             self.studentTable.setItem(row_no, 5, QTableWidgetItem(str(student["year"])))
             self.studentTable.setItem(row_no, 6, QTableWidgetItem(student["program_code"]))
 
-        program_value = student["program_code"]
-        display_program = program_value if program_value else "N/A"
+            program_value = student["program_code"]
+            display_program = program_value if program_value else "N/A"
 
-        self.studentTable.setItem(row_no, 6, QTableWidgetItem(display_program))
+            self.studentTable.setItem(row_no, 6, QTableWidgetItem(display_program))
         
     def show_contextMenu(self, postion):
         AE_menu = QMenu()
