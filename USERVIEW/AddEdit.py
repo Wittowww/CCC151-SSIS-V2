@@ -1,6 +1,6 @@
 from PySide6.QtWidgets import (
     QDialog, QVBoxLayout, QFormLayout, QLineEdit, 
-    QPushButton, QComboBox, QMessageBox, QHBoxLayout
+    QPushButton, QComboBox, QMessageBox
 )
 from PySide6.QtCore import Signal
 
@@ -15,9 +15,10 @@ from DATA.Commands import (
 class AddCollegeDialog(QDialog):
     college_updated = Signal()
 
-    def __init__(self, college_id = None, parent = None):
+    def __init__(self,  parent = None):
         super().__init__(parent)
         self.setWindowTitle("Add College")
+        self.setFixedSize(500, 200)
 
         self.collegeUI_setup()
 
@@ -69,6 +70,7 @@ class EditCollegeDialog(QDialog):
     def __init__(self, college_id,college_name = "", college_code = "", parent = None):
         super().__init__(parent)
         self.setWindowTitle("Edit College")
+        self.setFixedSize(500, 200)
 
         self.college_id = college_id
         self.collegeUI_setup(college_name, college_code)
@@ -120,6 +122,7 @@ class AddProgramDialog(QDialog):
     def __init__(self, parent = None):
         super().__init__(parent)
         self.setWindowTitle("Add Program")
+        self.setFixedSize(500, 200)
 
         self.programUI_setup()
 
@@ -176,6 +179,8 @@ class EditProgramDialog(QDialog):
     def __init__(self, program_id, program_name = "", program_code = "", college_code = "", parent = None):
         super().__init__(parent)
         self.setWindowTitle("Edit Program")
+        self.setFixedSize(500, 200)
+
         self.program_id = program_id
         self._build_ui(program_name, program_code, college_code)
  
@@ -237,6 +242,8 @@ class AddStudentsDialog(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setWindowTitle("Add Student")
+        self.setFixedSize(500, 200)
+
         self._build_ui()
  
     def _build_ui(self):
@@ -310,6 +317,8 @@ class EditStudentDialog(QDialog):
     def __init__(self, student_id, student_data=None, parent=None):
         super().__init__(parent)
         self.setWindowTitle("Edit Student")
+        self.setFixedSize(500, 200)
+
         self.student_id = student_id
         self._build_ui(student_data or {})
  
