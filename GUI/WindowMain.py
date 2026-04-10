@@ -1,9 +1,11 @@
 import os
 
 from PySide6.QtWidgets import ( 
-    QApplication, QMainWindow, QWidget, QHBoxLayout, QVBoxLayout, QLabel, QPushButton, QStackedWidget, QMessageBox, QLineEdit, QComboBox
+    QApplication, QMainWindow, QWidget, QHBoxLayout,
+    QVBoxLayout, QLabel, QPushButton, QStackedWidget, 
+    QMessageBox, QLineEdit, QComboBox
     )
-from PySide6.QtGui import QIcon, QAction
+from PySide6.QtGui import QIcon
 from PySide6.QtCore import Qt
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
