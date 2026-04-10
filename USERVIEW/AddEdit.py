@@ -1,6 +1,6 @@
 from PySide6.QtWidgets import (
     QDialog, QVBoxLayout, QFormLayout, QLineEdit, 
-    QPushButton, QComboBox, QMessageBox, QHBoxLayout
+    QPushButton, QComboBox, QMessageBox
 )
 from PySide6.QtCore import Signal
 
@@ -15,7 +15,7 @@ from DATA.Commands import (
 class AddCollegeDialog(QDialog):
     college_updated = Signal()
 
-    def __init__(self, college_id = None, parent = None):
+    def __init__(self,  parent = None):
         super().__init__(parent)
         self.setWindowTitle("Add College")
         self.setFixedSize(500, 200)
