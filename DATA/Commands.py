@@ -128,20 +128,20 @@ def get_all_students():
                 s.year,
                 p.program_code
             FROM students s
-            JOIN program p ON s.program_code = p.program_code
+            LEFT JOIN program p ON s.program_code = p.program_code
         """)
         return cursor.fetchall()
     finally:
         connection.close()
 
 
-def add_students(students_id, first_name, last_name, gender, year, program_code):
+def add_students(student_id, first_name, last_name, gender, year, program_code):
     connection = GetConnection()
     try:
         cursor = connection.cursor()
         cursor.execute (
-            """INSERT INTO students (students_id, first_name, last_name, gender, year, program_code) VALUES (%s, %s, %s, %s, %s, %s) """,
-            (students_id, first_name, last_name, gender, year, program_code)
+            """INSERT INTO students (student_id, first_name, last_name, gender, year, program_code) VALUES (%s, %s, %s, %s, %s, %s) """,
+            (student_id, first_name, last_name, gender, year, program_code)
             )
         connection.commit()
     finally:
@@ -159,14 +159,14 @@ def delete_students(student_id):
     finally:
         connection.close()
 
-def update_students(students_id, first_name, last_name, gender, year, program_code, student_id):
+def update_students(student_id, first_name, last_name, gender, year, program_code,strecord_id):
     connection = GetConnection()
     try:
         cursor = connection.cursor()
         cursor.execute (
             """UPDATE students 
             SET 
-            students_id = %s,
+            student_id = %s,
             first_name = %s,
             last_name = %s,
             gender = %s,
@@ -174,7 +174,7 @@ def update_students(students_id, first_name, last_name, gender, year, program_co
             program_code = %s
             WHERE 
             id = %s """,
-            (students_id, first_name, last_name, gender, year, program_code, student_id)
+            (student_id, first_name, last_name, gender, year, program_code,strecord_id)
             )
         connection.commit()
     finally:

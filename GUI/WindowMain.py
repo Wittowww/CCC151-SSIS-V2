@@ -109,10 +109,13 @@ class mainApp(QMainWindow):
     # Makes sure the is shown when table buttons clicked
     def showStudentsTable(self):
         self.TablePage.setCurrentIndex(0)
+        self.studentsTablePage.load_studentTable()
     def showProgramTable(self):
         self.TablePage.setCurrentIndex(1)
+        self.programTablePage.load_programTable() 
     def showCollegeTable(self):
         self.TablePage.setCurrentIndex(2)
+        self.collegesTablePage.load_collegeTable()  
 
     def update_sortBox(self, index):
         self.sortBox.blockSignals(True) 

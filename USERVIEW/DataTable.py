@@ -91,7 +91,7 @@ class CollegeTable(QWidget):
 
     def search(self, text):
         text = text.lower()
-        filtered_data = [
+        self.filtered_data = [
             c for c in self._all_colleges
             if text in c["college_name"].lower() or text in c["college_code"].lower()
         ]
@@ -222,7 +222,7 @@ class ProgramTable(QWidget):
 
     def search(self, text):
         text = text.lower()
-        filtered_data = [
+        self.filtered_data = [
             p for p in self._all_programs
             if text in p["program_code"].lower()
             or text in p["program_name"].lower()
