@@ -27,10 +27,13 @@ class CollegeTable(QWidget):
     def collegetable_setup(self):
         college_Layout = QVBoxLayout()
 
+
         self.collegeTable = QTableWidget()
         self.collegeTable.setColumnCount(2)
         self.collegeTable.setHorizontalHeaderLabels(["College Name", "College Code"])
         self.collegeTable.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        self.collegeTable.verticalHeader().setDefaultSectionSize(39) 
+        self.collegeTable.setMaximumHeight(ROWS_PER_PAGE * 39 + 30)
 
         self.collegeTable.setContextMenuPolicy(Qt.CustomContextMenu)
         self.collegeTable.customContextMenuRequested.connect(self.show_contextMenu)
@@ -49,9 +52,9 @@ class CollegeTable(QWidget):
         page_layout.addWidget(self.next_btn)
         page_layout.addStretch()
         college_Layout.addLayout(page_layout)
- 
-        self.load_collegeTable()
+
         self.setLayout(college_Layout)
+        self.load_collegeTable()
 
     def load_collegeTable(self):
         self._all_colleges = get_all_college()    
@@ -61,11 +64,15 @@ class CollegeTable(QWidget):
 
     def populate_collegeTable(self, data):
         self.collegeTable.setRowCount(len(data))
+        start_number = self.current_page * ROWS_PER_PAGE + 1 
+
         for row_no, college in enumerate(data):
             name_item = QTableWidgetItem(college["college_name"])
             name_item.setData(Qt.UserRole, college["id"])
             self.collegeTable.setItem(row_no, 0, name_item)
             self.collegeTable.setItem(row_no, 1, QTableWidgetItem(college["college_code"]))
+
+        self.collegeTable.setVerticalHeaderLabels([str(start_number + i) for i in range(len(data))]) 
 
     def refresh_page(self):
         total_pages = max(1, -(-len(self.filtered_data) // ROWS_PER_PAGE)) 
@@ -144,8 +151,12 @@ class CollegeTable(QWidget):
             QMessageBox.Yes | QMessageBox.No
         )
         if confirm == QMessageBox.Yes:
-            delete_college(college_id)
-            self.load_collegeTable()
+            result = delete_college(college_id)
+            if result:
+                QMessageBox.information(self, "Success", f"College '{college_name}' deleted!")
+                self.load_collegeTable()
+            else:
+                QMessageBox.warning(self, "Error", f"College '{college_name}' not found!")
 
 
 # PROGRAM FUNCTIONS
@@ -163,7 +174,9 @@ class ProgramTable(QWidget):
         self.programTable.setColumnCount(3)
         self.programTable.setHorizontalHeaderLabels(["Program Code", "Program Name", "College ID"])
         self.programTable.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
-
+        self.programTable.verticalHeader().setDefaultSectionSize(39) 
+        self.programTable.setMaximumHeight(ROWS_PER_PAGE * 39 + 30)
+        
         self.programTable.setContextMenuPolicy(Qt.CustomContextMenu)
         self.programTable.customContextMenuRequested.connect(self.show_contextMenu)
 
@@ -182,8 +195,8 @@ class ProgramTable(QWidget):
         page_layout.addStretch()
         program_Layout.addLayout(page_layout)
 
-        self.load_programTable()
         self.setLayout(program_Layout)
+        self.load_programTable()
 
     def load_programTable(self):
         self._all_programs = get_all_program()   
@@ -193,12 +206,16 @@ class ProgramTable(QWidget):
 
     def populate_programTable(self, data):
         self.programTable.setRowCount(len(data))
+        start_number = self.current_page * ROWS_PER_PAGE + 1 
+
         for row_no, program in enumerate(data):
             code_item = QTableWidgetItem(program["program_code"])
             code_item.setData(Qt.UserRole, program["id"]) 
             self.programTable.setItem(row_no, 0, code_item)
             self.programTable.setItem(row_no, 1, QTableWidgetItem(program["program_name"]))
             self.programTable.setItem(row_no, 2, QTableWidgetItem(str(program["college_code"])))
+
+        self.programTable.setVerticalHeaderLabels([str(start_number + i) for i in range(len(data))]) 
 
     def refresh_page(self):
         total_pages = max(1, -(-len(self.filtered_data) // ROWS_PER_PAGE))
@@ -276,8 +293,12 @@ class ProgramTable(QWidget):
             QMessageBox.Yes | QMessageBox.No
         )
         if confirm == QMessageBox.Yes:
-            delete_program(program_id)
-            self.load_programTable()
+            result = delete_program(program_id)
+            if result:
+                QMessageBox.information(self, "Success", f"Program '{program_name}' deleted!")
+                self.load_programTable()
+            else:
+                QMessageBox.warning(self, "Error", f"Program '{program_name}' not found!")
 
 
 # STUDENT FUNCTIONS
@@ -295,6 +316,8 @@ class StudentsTable(QWidget):
         self.studentTable.setColumnCount(6)
         self.studentTable.setHorizontalHeaderLabels(["Student ID", "First Name", "Last Name", "Gender", "Year", "Program"])
         self.studentTable.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        self.studentTable.verticalHeader().setDefaultSectionSize(39) 
+        self.studentTable.setMaximumHeight(ROWS_PER_PAGE * 39 + 30) 
 
         self.studentTable.setContextMenuPolicy(Qt.CustomContextMenu)
         self.studentTable.customContextMenuRequested.connect(self.show_contextMenu)
@@ -314,8 +337,8 @@ class StudentsTable(QWidget):
         page_layout.addStretch()
         student_Layout.addLayout(page_layout)
 
-        self.load_studentTable()
         self.setLayout(student_Layout)
+        self.load_studentTable()
 
     def load_studentTable(self):
         self._all_students = get_all_students()
@@ -325,6 +348,8 @@ class StudentsTable(QWidget):
 
     def populate_studentTable(self, data):
         self.studentTable.setRowCount(len(data))
+        start_number = self.current_page * ROWS_PER_PAGE + 1 
+
         for row_no, student in enumerate(data):
             sid_item = QTableWidgetItem(student["student_id"])
             sid_item.setData(Qt.UserRole, student["id"])    # store real DB id
@@ -335,6 +360,8 @@ class StudentsTable(QWidget):
             self.studentTable.setItem(row_no, 4, QTableWidgetItem(str(student["year"])))
             program_value = student["program_code"] or "N/A"
             self.studentTable.setItem(row_no, 5, QTableWidgetItem(program_value))
+
+        self.studentTable.setVerticalHeaderLabels([str(start_number + i) for i in range(len(data))]) 
 
     def refresh_page(self):
         total_pages = max(1, -(-len(self.filtered_data) // ROWS_PER_PAGE))
@@ -421,5 +448,9 @@ class StudentsTable(QWidget):
             QMessageBox.Yes | QMessageBox.No
         )
         if confirm == QMessageBox.Yes:
-            delete_students(db_id)
-            self.load_studentTable() 
+            result = delete_students(db_id)
+            if result:
+                QMessageBox.information(self, "Success", f"Student '{student_id}' deleted!")
+                self.load_studentTable()
+            else:
+                QMessageBox.warning(self, "Error", f"Student '{student_id}' not found!")

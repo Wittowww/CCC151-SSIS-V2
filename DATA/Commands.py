@@ -31,6 +31,8 @@ def delete_college(college_id):
             (college_id,)
         )
         connection.commit()
+        rows_affected = cursor.rowcount
+        return rows_affected > 0 
     finally:
         connection.close()
 
@@ -91,6 +93,8 @@ def delete_program(program_id):
             (program_id,)
             )
         connection.commit()
+        rows_affected = cursor.rowcount
+        return rows_affected > 0
     finally:
         connection.close()
 
@@ -156,6 +160,8 @@ def delete_students(student_id):
             (student_id,)
             )
         connection.commit()
+        rows_affected = cursor.rowcount
+        return rows_affected > 0
     finally:
         connection.close()
 
