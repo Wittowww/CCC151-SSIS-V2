@@ -1,3 +1,5 @@
+import re
+
 from PySide6.QtWidgets import (
     QDialog, QVBoxLayout, QFormLayout, QLineEdit, 
     QPushButton, QComboBox, QMessageBox
@@ -134,6 +136,7 @@ class AddProgramDialog(QDialog):
         self.Input_programCode = QLineEdit()
  
         self.Choose_college = QComboBox()
+        self.Choose_college.addItem("Select College", None)
         for c in get_all_college():
             self.Choose_college.addItem(c["college_code"], c["college_code"])
  
@@ -155,6 +158,8 @@ class AddProgramDialog(QDialog):
             return "Program Code is required."
         if self.Choose_college.count() == 0:
             return "No colleges available. Please add a college first."
+        if self.Choose_college.currentText() == "Select College":
+            return "Please select a college."
         return None
  
     def _save(self):
@@ -192,6 +197,7 @@ class EditProgramDialog(QDialog):
         self.Input_programCode = QLineEdit(program_code)
  
         self.Choose_college = QComboBox()
+        self.Choose_college.addItem("Select College", None)
         for c in get_all_college():
             self.Choose_college.addItem(c["college_code"], c["college_code"])
  
@@ -216,6 +222,8 @@ class EditProgramDialog(QDialog):
             return "Program Name is required."
         if not self.Input_programCode.text().strip():
             return "Program Code is required."
+        if self.Choose_college.currentText() == "Select College":
+            return "Please select a college."
         return None
  
     def _save(self):
@@ -260,6 +268,7 @@ class AddStudentsDialog(QDialog):
         self.Input_year = QLineEdit()
  
         self.Choose_program = QComboBox()
+        self.Choose_program.addItem("Select Program", None)
         for p in get_all_program():
             self.Choose_program.addItem(p["program_code"], p["program_code"])
  
@@ -278,8 +287,14 @@ class AddStudentsDialog(QDialog):
         self.setLayout(student_layout)
  
     def _validate(self):
-        if not self.Input_studentID.text().strip():
+        sid = self.Input_studentID.text().strip()
+    
+        if not sid:
             return "Student ID is required."
+            # Check YYYY-XXXX format
+        if not re.match(r'^\d{4}-\d{4}$', sid):
+            return "Student ID must be in YYYY-XXXX format (e.g. 2021-0392)."
+        
         if not self.Input_firstName.text().strip():
             return "First Name is required."
         if not self.Input_lastName.text().strip():
@@ -290,6 +305,8 @@ class AddStudentsDialog(QDialog):
             return "Year must be a valid number."
         if self.Choose_program.count() == 0:
             return "No programs available. Please add a program first."
+        if self.Choose_program.currentText() == "Select Program":
+            return "Please select a program."
         return None
  
     def _save(self):
@@ -327,6 +344,7 @@ class EditStudentDialog(QDialog):
         student_form   = QFormLayout()
  
         self.Input_studentID = QLineEdit(d.get("student_id", ""))
+        self.Input_studentID.setPlaceholderText("YYYY-XXXX")
         self.Input_firstName = QLineEdit(d.get("first_name", ""))
         self.Input_lastName  = QLineEdit(d.get("last_name",  ""))
  
@@ -339,6 +357,7 @@ class EditStudentDialog(QDialog):
         self.Input_year = QLineEdit(str(d.get("year", "")))
  
         self.Choose_program = QComboBox()
+        self.Choose_program.addItem("Select Program", None)
         for p in get_all_program():
             self.Choose_program.addItem(p["program_code"], p["program_code"])
         pidx = self.Choose_program.findData(d.get("program_code", ""))
@@ -360,6 +379,14 @@ class EditStudentDialog(QDialog):
         self.setLayout(student_layout)
  
     def _validate(self):
+        sid = self.Input_studentID.text().strip()
+    
+        if not sid:
+            return "Student ID is required."
+            # Check YYYY-XXXX format
+        if not re.match(r'^\d{4}-\d{4}$', sid):
+            return "Student ID must be in YYYY-XXXX format (e.g. 2021-0392)."
+        
         if not self.Input_studentID.text().strip():
             return "Student ID is required."
         if not self.Input_firstName.text().strip():
@@ -370,6 +397,8 @@ class EditStudentDialog(QDialog):
             return "Please select a gender."
         if not self.Input_year.text().strip().isdigit():
             return "Year must be a valid number."
+        if self.Choose_program.currentText() == "Select Program":
+            return "Please select a program."
         return None
  
     def _save(self):

@@ -28,7 +28,7 @@ class mainApp(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Simple Student Information Management V2")
-        self.setFixedSize(1200, 700)
+        self.setFixedSize(1200, 800)
 
         icon_path = os.path.join(BASE_DIR, "StudentInfo ICON.png")
         self.setWindowIcon(QIcon(icon_path))
@@ -45,13 +45,13 @@ class mainApp(QMainWindow):
 
         #Label / name 
         TITLElable = QLabel("Simple System Information System")
-        TITLElable.setFixedHeight(70)
+        TITLElable.setFixedHeight(50)
 
         #Page Picker for Tables
 
         #layout thingsz
         upperBox_container = QWidget()
-        upperBox_container.setFixedHeight(70)
+        upperBox_container.setFixedHeight(50)
 
         upperBox = QHBoxLayout(upperBox_container)
 
@@ -84,7 +84,7 @@ class mainApp(QMainWindow):
 
         #Layout for the table pages
         self.TablePage = QStackedWidget()
-        self.TablePage.setMinimumHeight(580)
+        self.TablePage.setMinimumHeight(550)
 
         self.studentsTablePage = StudentsTable()
         self.programTablePage = ProgramTable()
@@ -109,10 +109,13 @@ class mainApp(QMainWindow):
     # Makes sure the is shown when table buttons clicked
     def showStudentsTable(self):
         self.TablePage.setCurrentIndex(0)
+        self.studentsTablePage.load_studentTable()
     def showProgramTable(self):
         self.TablePage.setCurrentIndex(1)
+        self.programTablePage.load_programTable() 
     def showCollegeTable(self):
         self.TablePage.setCurrentIndex(2)
+        self.collegesTablePage.load_collegeTable()  
 
     def update_sortBox(self, index):
         self.sortBox.blockSignals(True) 
