@@ -26,13 +26,27 @@ def delete_college(college_id):
     connection = GetConnection()
     try:
         cursor = connection.cursor()
-        cursor.execute (
-            """DELETE FROM college WHERE id = %s """,
-            (college_id,)
+
+        cursor.execute("SELECT college_code FROM college WHERE id = %s", (college_id,))
+        row = cursor.fetchone()
+        if not row:
+            return False
+        
+        college_code = row[0]
+
+        cursor.execute(
+            "UPDATE program SET college_code = 'N/A' WHERE college_code = %s",
+            (college_code,)
         )
+
+        cursor.execute("DELETE FROM college WHERE id = %s", (college_id,))
+
         connection.commit()
-        rows_affected = cursor.rowcount
-        return rows_affected > 0 
+        return cursor.rowcount > 0
+    except Exception as e:
+        print(f"Delete college error: {e}")
+        connection.rollback()
+        return False
     finally:
         connection.close()
 
