@@ -4,6 +4,7 @@ from PySide6.QtWidgets import (
     QPushButton, QHBoxLayout
     )
 from PySide6.QtCore import Qt
+from PySide6.QtGui import QFont
 
 from DATA.Commands import (
     get_all_college, add_college, delete_college,
@@ -29,14 +30,20 @@ class CollegeTable(QWidget):
 
 
         self.collegeTable = QTableWidget()
+        font = QFont("Arial", 10)
+        self.collegeTable.setFont(font)
         self.collegeTable.setAlternatingRowColors(True)
         self.collegeTable.setColumnCount(2)
-        self.collegeTable.setHorizontalHeaderLabels(["College Name", "College Code"])
+        self.collegeTable.setHorizontalHeaderLabels(["College Code", "College Name"])
         header = self.collegeTable.horizontalHeader()
-        header.setSectionResizeMode(0, QHeaderView.Stretch)
-        header.setSectionResizeMode(1, QHeaderView.Fixed)
+        header.setSectionResizeMode(0, QHeaderView.Fixed)
+        header.setSectionResizeMode(1, QHeaderView.Stretch)
 
-        self.collegeTable.setColumnWidth(1, 120)
+        vertical_header = self.collegeTable.verticalHeader()
+        vertical_header.setFont(QFont("Arial", 8, QFont.DemiBold))
+        vertical_header.setDefaultAlignment(Qt.AlignCenter)
+
+        self.collegeTable.setColumnWidth(0, 120)
         self.collegeTable.verticalHeader().setDefaultSectionSize(39) 
         self.collegeTable.setMaximumHeight(ROWS_PER_PAGE * 39 + 30)
 
@@ -73,8 +80,8 @@ class CollegeTable(QWidget):
         for row_no, college in enumerate(data):
             name_item = QTableWidgetItem(college["college_name"])
             name_item.setData(Qt.UserRole, college["id"])
-            self.collegeTable.setItem(row_no, 0, name_item)
-            self.collegeTable.setItem(row_no, 1, QTableWidgetItem(college["college_code"]))
+            self.collegeTable.setItem(row_no, 0, QTableWidgetItem(college["college_code"]))
+            self.collegeTable.setItem(row_no, 1, name_item)
 
         self.collegeTable.setVerticalHeaderLabels([str(start_number + i) for i in range(len(data))]) 
 
@@ -110,7 +117,7 @@ class CollegeTable(QWidget):
         self.refresh_page()
 
     def sort(self, index):
-        keys = ["college_code", "college_name"]
+        keys = ["college_name", "college_code"]
         key = keys[index]
         self.filtered_data.sort(key=lambda c: str(c[key] or "").lower())
         self.current_page = 0
@@ -134,9 +141,10 @@ class CollegeTable(QWidget):
             QMessageBox.warning(self, "Error", "Please select a college to edit.")
             return
  
-        college_id   = self.collegeTable.item(row, 0).data(Qt.UserRole)
-        college_name = self.collegeTable.item(row, 0).text()
-        college_code = self.collegeTable.item(row, 1).text()
+        college_id   = self.collegeTable.item(row, 1).data(Qt.UserRole)
+        college_code = self.collegeTable.item(row, 0).text()
+        college_name = self.collegeTable.item(row, 1).text()
+        
  
         dialog = EditCollegeDialog(college_id, college_name, college_code, self)
         dialog.college_updated.connect(self.load_collegeTable)
@@ -148,8 +156,8 @@ class CollegeTable(QWidget):
             QMessageBox.warning(self, "Error", "Please select a college to delete.")
             return
  
-        college_id   = self.collegeTable.item(row, 0).data(Qt.UserRole)
-        college_name = self.collegeTable.item(row, 0).text()
+        college_id   = self.collegeTable.item(row, 1).data(Qt.UserRole)
+        college_name = self.collegeTable.item(row, 1).text()
  
         confirm = QMessageBox.question(
             self, "Confirm Delete",
@@ -179,13 +187,19 @@ class ProgramTable(QWidget):
         program_Layout = QVBoxLayout()
 
         self.programTable = QTableWidget()
+        font = QFont("Arial", 10)
+        self.programTable.setFont(font)
         self.programTable.setAlternatingRowColors(True)
         self.programTable.setColumnCount(3)
-        self.programTable.setHorizontalHeaderLabels(["Program Code", "Program Name", "College ID"])
+        self.programTable.setHorizontalHeaderLabels(["Program Code", "Program Name", "College Code"])
         header = self.programTable.horizontalHeader()
         header.setSectionResizeMode(0, QHeaderView.Fixed)
         header.setSectionResizeMode(1, QHeaderView.Stretch)
         header.setSectionResizeMode(2, QHeaderView.Fixed)
+
+        vertical_header = self.programTable.verticalHeader()
+        vertical_header.setFont(QFont("Arial", 8, QFont.DemiBold))
+        vertical_header.setDefaultAlignment(Qt.AlignCenter)
 
         self.programTable.setColumnWidth(0, 120)
         self.programTable.setColumnWidth(2, 100) 
@@ -226,6 +240,11 @@ class ProgramTable(QWidget):
         for row_no, program in enumerate(data):
             code_item = QTableWidgetItem(program["program_code"])
             code_item.setData(Qt.UserRole, program["id"]) 
+
+            sid_font = QFont("Arial", 10)
+            sid_font.setWeight(QFont.Medium)          # semi bold
+            code_item.setFont(sid_font)
+
             self.programTable.setItem(row_no, 0, code_item)
             self.programTable.setItem(row_no, 1, QTableWidgetItem(program["program_name"]))
             self.programTable.setItem(row_no, 2, QTableWidgetItem(str(program["college_code"])))
@@ -332,6 +351,8 @@ class StudentsTable(QWidget):
         student_Layout = QVBoxLayout()
 
         self.studentTable = QTableWidget()
+        font = QFont("Arial", 10)
+        self.studentTable.setFont(font)
         self.studentTable.setAlternatingRowColors(True) 
         self.studentTable.setColumnCount(6)
         self.studentTable.setHorizontalHeaderLabels(["Student ID", "First Name", "Last Name", "Gender", "Year", "Program"])
@@ -342,6 +363,11 @@ class StudentsTable(QWidget):
         header.setSectionResizeMode(3, QHeaderView.Fixed)
         header.setSectionResizeMode(4, QHeaderView.Fixed)
         header.setSectionResizeMode(5, QHeaderView.Fixed)
+
+        vertical_header = self.studentTable.verticalHeader()
+        vertical_header.setFont(QFont("Arial", 8, QFont.DemiBold))
+        vertical_header.setDefaultAlignment(Qt.AlignCenter)
+
 
         self.studentTable.setColumnWidth(0, 120)
         self.studentTable.setColumnWidth(3, 100)
@@ -383,7 +409,13 @@ class StudentsTable(QWidget):
 
         for row_no, student in enumerate(data):
             sid_item = QTableWidgetItem(student["student_id"])
-            sid_item.setData(Qt.UserRole, student["id"])    # store real DB id
+            sid_item.setData(Qt.UserRole, student["id"]) 
+            
+            sid_font = QFont("Arial", 10)
+            sid_font.setWeight(QFont.DemiBold)          # semi bold
+            sid_item.setFont(sid_font)
+            sid_item.setTextAlignment(Qt.AlignCenter) 
+
             self.studentTable.setItem(row_no, 0, sid_item)
             self.studentTable.setItem(row_no, 1, QTableWidgetItem(student["first_name"]))
             self.studentTable.setItem(row_no, 2, QTableWidgetItem(student["last_name"]))

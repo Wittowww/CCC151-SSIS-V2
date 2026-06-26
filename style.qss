@@ -45,7 +45,7 @@ QPushButton {
 }
 
 QPushButton:hover {
-    background-color: #CDD7D8;
+    background-color: #AAB026;
 }
 
 QLineEdit, QComboBox {

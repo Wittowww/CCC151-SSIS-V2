@@ -5,7 +5,7 @@ from PySide6.QtWidgets import (
     QVBoxLayout, QLabel, QPushButton, QStackedWidget, 
     QMessageBox, QLineEdit, QComboBox
     )
-from PySide6.QtGui import QIcon
+from PySide6.QtGui import QFont, QIcon
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QScreen
 
@@ -48,6 +48,10 @@ class mainApp(QMainWindow):
         #Label / name 
         TITLElable = QLabel("Simple System Information System")
         TITLElable.setFixedHeight(50)
+        font = QFont("Georgia", 28)    
+        font.setBold(True)              
+        TITLElable.setFont(font)
+        TITLElable.setAlignment(Qt.AlignCenter)
 
         #Page Picker for Tables
 
@@ -131,7 +135,7 @@ class mainApp(QMainWindow):
         elif index == 1: 
             self.sortBox.addItems(["Program Code", "Program Name", "College"])
         elif index == 2:
-            self.sortBox.addItems(["College Code", "College Name"])
+            self.sortBox.addItems(["College Name", "College Code"])
 
     def handle_sort(self, index):
         current_widget = self.TablePage.currentWidget()
