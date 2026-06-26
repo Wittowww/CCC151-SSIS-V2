@@ -250,7 +250,7 @@ class AddStudentsDialog(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setWindowTitle("Add Student")
-        self.setFixedSize(500, 200)
+        self.setFixedSize(500, 300)
 
         self._build_ui()
  
@@ -266,18 +266,22 @@ class AddStudentsDialog(QDialog):
         self.Choose_gender.addItems(["Select Gender", "Female", "Male"])
  
         self.Input_year = QLineEdit()
- 
-        self.Choose_program = QComboBox()
-        self.Choose_program.addItem("Select Program", None)
-        for p in get_all_program():
-            self.Choose_program.addItem(p["program_code"], p["program_code"])
+
+        self.Choose_college = QComboBox()
+        self.Choose_college.addItem("Select College", None)
+        for c in get_all_college():
+            self.Choose_college.addItem(c["college_name"], c["college_code"])
+
+        self.program_combo = QComboBox()
+        self.Choose_college.currentIndexChanged.connect(self.filter_programs)
  
         student_form.addRow("Student ID:", self.Input_studentID)
         student_form.addRow("First Name:", self.Input_firstName)
         student_form.addRow("Last Name:",  self.Input_lastName)
         student_form.addRow("Gender:",     self.Choose_gender)
         student_form.addRow("Year:",       self.Input_year)
-        student_form.addRow("Program:",    self.Choose_program)
+        student_form.addRow("College:", self.Choose_college)
+        student_form.addRow("Program:", self.program_combo)
         student_layout.addLayout(student_form)
  
         saveButton = QPushButton("Add Student")
@@ -285,7 +289,16 @@ class AddStudentsDialog(QDialog):
         student_layout.addWidget(saveButton)
  
         self.setLayout(student_layout)
- 
+
+    def filter_programs(self):
+        selected_college_code = self.Choose_college.currentData()
+        self.program_combo.clear()
+        self.program_combo.addItem("Select Program", None)
+        programs = get_all_program()
+        for p in programs:
+            if p["college_code"] == selected_college_code:
+                self.program_combo.addItem(p["program_name"], p["program_code"])
+    
     def _validate(self):
         sid = self.Input_studentID.text().strip()
     
@@ -303,9 +316,9 @@ class AddStudentsDialog(QDialog):
             return "Please select a gender."
         if not self.Input_year.text().strip().isdigit():
             return "Year must be a valid number."
-        if self.Choose_program.count() == 0:
+        if self.program_combo.count() == 0:
             return "No programs available. Please add a program first."
-        if self.Choose_program.currentText() == "Select Program":
+        if self.program_combo.currentText() == "Select Program":
             return "Please select a program."
         return None
  
@@ -321,7 +334,7 @@ class AddStudentsDialog(QDialog):
                 self.Input_lastName.text().strip(),
                 self.Choose_gender.currentText(),
                 int(self.Input_year.text().strip()),
-                self.Choose_program.currentData()
+                program_code = self.program_combo.currentData() 
             )
             self.student_updated.emit()
             self.accept()
@@ -331,10 +344,10 @@ class AddStudentsDialog(QDialog):
 class EditStudentDialog(QDialog):
     student_updated = Signal()
  
-    def __init__(self, student_id, student_data=None, parent=None):
+    def __init__(self, student_id, student_data = None, parent = None):
         super().__init__(parent)
         self.setWindowTitle("Edit Student")
-        self.setFixedSize(500, 200)
+        self.setFixedSize(500, 300)
 
         self.student_id = student_id
         self._build_ui(student_data or {})
@@ -355,21 +368,34 @@ class EditStudentDialog(QDialog):
             self.Choose_gender.setCurrentIndex(idx)
  
         self.Input_year = QLineEdit(str(d.get("year", "")))
- 
-        self.Choose_program = QComboBox()
-        self.Choose_program.addItem("Select Program", None)
-        for p in get_all_program():
-            self.Choose_program.addItem(p["program_code"], p["program_code"])
-        pidx = self.Choose_program.findData(d.get("program_code", ""))
-        if pidx >= 0:
-            self.Choose_program.setCurrentIndex(pidx)
+
+        self.Choose_college = QComboBox()
+        self.Choose_college.addItem("Select College", None)
+        colleges = get_all_college()
+        for c in colleges:
+            self.Choose_college.addItem(c["college_name"], c["college_code"])    
+
+        self.program_combo = QComboBox()
+        self.Choose_college.currentIndexChanged.connect(self.filter_programs)
+
+        current_program_code = d.get("program_code")
+        current_college_code = self.get_college_for_program(current_program_code)
+
+        college_index = self.Choose_college.findData(current_college_code)
+        if college_index != -1:
+            self.Choose_college.setCurrentIndex(college_index)
+        self.filter_programs()  
+
+        program_index = self.program_combo.findData(current_program_code)
+        if program_index != -1:
+            self.program_combo.setCurrentIndex(program_index)
  
         student_form.addRow("Student ID:", self.Input_studentID)
         student_form.addRow("First Name:", self.Input_firstName)
         student_form.addRow("Last Name:",  self.Input_lastName)
         student_form.addRow("Gender:",     self.Choose_gender)
         student_form.addRow("Year:",       self.Input_year)
-        student_form.addRow("Program:",    self.Choose_program)
+        student_form.addRow("Program:",    self.program_combo)
         student_layout.addLayout(student_form)
  
         saveButton = QPushButton("Save Changes")
@@ -377,6 +403,22 @@ class EditStudentDialog(QDialog):
         student_layout.addWidget(saveButton)
  
         self.setLayout(student_layout)
+
+    def filter_programs(self):
+        selected_college_code = self.Choose_college.currentData()
+        self.program_combo.clear()
+        self.program_combo.addItem("Select Program", None)
+        programs = get_all_program()
+        for p in programs:
+            if p["college_code"] == selected_college_code:
+                self.program_combo.addItem(p["program_name"], p["program_code"])
+
+    def get_college_for_program(self, program_code):
+        programs = get_all_program()
+        for p in programs:
+            if p["program_code"] == program_code:
+                return p["college_code"]
+        return None
  
     def _validate(self):
         sid = self.Input_studentID.text().strip()
@@ -397,7 +439,7 @@ class EditStudentDialog(QDialog):
             return "Please select a gender."
         if not self.Input_year.text().strip().isdigit():
             return "Year must be a valid number."
-        if self.Choose_program.currentText() == "Select Program":
+        if self.program_combo.currentText() == "Select Program":
             return "Please select a program."
         return None
  
@@ -413,7 +455,7 @@ class EditStudentDialog(QDialog):
                 self.Input_lastName.text().strip(),
                 self.Choose_gender.currentText(),
                 int(self.Input_year.text().strip()),
-                self.Choose_program.currentData(),
+                self.program_combo.currentData(),
                 self.student_id
             )
             self.student_updated.emit()

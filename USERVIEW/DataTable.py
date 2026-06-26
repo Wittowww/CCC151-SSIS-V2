@@ -32,7 +32,11 @@ class CollegeTable(QWidget):
         self.collegeTable.setAlternatingRowColors(True)
         self.collegeTable.setColumnCount(2)
         self.collegeTable.setHorizontalHeaderLabels(["College Name", "College Code"])
-        self.collegeTable.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        header = self.collegeTable.horizontalHeader()
+        header.setSectionResizeMode(0, QHeaderView.Stretch)
+        header.setSectionResizeMode(1, QHeaderView.Fixed)
+
+        self.collegeTable.setColumnWidth(1, 120)
         self.collegeTable.verticalHeader().setDefaultSectionSize(39) 
         self.collegeTable.setMaximumHeight(ROWS_PER_PAGE * 39 + 30)
 
@@ -178,7 +182,13 @@ class ProgramTable(QWidget):
         self.programTable.setAlternatingRowColors(True)
         self.programTable.setColumnCount(3)
         self.programTable.setHorizontalHeaderLabels(["Program Code", "Program Name", "College ID"])
-        self.programTable.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        header = self.programTable.horizontalHeader()
+        header.setSectionResizeMode(0, QHeaderView.Fixed)
+        header.setSectionResizeMode(1, QHeaderView.Stretch)
+        header.setSectionResizeMode(2, QHeaderView.Fixed)
+
+        self.programTable.setColumnWidth(0, 120)
+        self.programTable.setColumnWidth(2, 100) 
         self.programTable.verticalHeader().setDefaultSectionSize(39) 
         self.programTable.setMaximumHeight(ROWS_PER_PAGE * 39 + 30)
         
@@ -325,7 +335,18 @@ class StudentsTable(QWidget):
         self.studentTable.setAlternatingRowColors(True) 
         self.studentTable.setColumnCount(6)
         self.studentTable.setHorizontalHeaderLabels(["Student ID", "First Name", "Last Name", "Gender", "Year", "Program"])
-        self.studentTable.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        header = self.studentTable.horizontalHeader()
+        header.setSectionResizeMode(0, QHeaderView.Fixed)
+        header.setSectionResizeMode(1, QHeaderView.Stretch)
+        header.setSectionResizeMode(2, QHeaderView.Stretch)
+        header.setSectionResizeMode(3, QHeaderView.Fixed)
+        header.setSectionResizeMode(4, QHeaderView.Fixed)
+        header.setSectionResizeMode(5, QHeaderView.Fixed)
+
+        self.studentTable.setColumnWidth(0, 120)
+        self.studentTable.setColumnWidth(3, 100)
+        self.studentTable.setColumnWidth(4, 90)
+        self.studentTable.setColumnWidth(5, 120)
         self.studentTable.verticalHeader().setDefaultSectionSize(39) 
         self.studentTable.setMaximumHeight(ROWS_PER_PAGE * 39 + 30) 
 
@@ -368,7 +389,7 @@ class StudentsTable(QWidget):
             self.studentTable.setItem(row_no, 2, QTableWidgetItem(student["last_name"]))
             self.studentTable.setItem(row_no, 3, QTableWidgetItem(student["gender"]))
             self.studentTable.setItem(row_no, 4, QTableWidgetItem(str(student["year"])))
-            program_value = student["program_code"] or "N/A"
+            program_value = student["program_code"] or "Not Enrolled"
             self.studentTable.setItem(row_no, 5, QTableWidgetItem(program_value))
 
         self.studentTable.setVerticalHeaderLabels([str(start_number + i) for i in range(len(data))]) 
