@@ -75,7 +75,7 @@ class mainApp(QMainWindow):
         self.searchBar = QLineEdit()
         self.searchBar.setPlaceholderText("Search...")
         self.searchBar.setFixedWidth(200)
-        self.searchBar.textChanged.connect(self.handle_search)
+        self.searchBar.returnPressed.connect(self.handle_search)
         upperBox.addWidget(self.searchBar)
 
         #Self Sort
@@ -113,10 +113,16 @@ class mainApp(QMainWindow):
         window_geo.moveCenter(screen.center())
         self.move(window_geo.topLeft())
 
-    def handle_search(self, text):
-        current_widget = self.TablePage.currentWidget()
-        if hasattr(current_widget, "search"):
-            current_widget.search(text)
+    def handle_search(self):
+        text = self.searchBar.text()
+        print(f"Searching: '{text}'") 
+        index = self.TablePage.currentIndex()
+        if index == 0:
+            self.studentsTablePage.search(text)
+        elif index == 1:
+            self.programTablePage.search(text)
+        elif index == 2:
+            self.collegesTablePage.search(text)
 
     def update_sortBox(self, index):
         self.sortBox.clear()
@@ -154,15 +160,6 @@ class mainApp(QMainWindow):
             self.sortBox.addItems(["Sort by...", "College Name", "College Code"])
         self.sortBox.blockSignals(False)
         self.searchBar.clear()
-
-    def handle_search(self, text):
-        index = self.TablePage.currentIndex()
-        if index == 0:
-            self.studentsTablePage.search(text)
-        elif index == 1:
-            self.programTablePage.search(text)
-        elif index == 2:
-            self.collegesTablePage.search(text)
 
     def handle_sort(self, sort_index):
         if sort_index == 0:

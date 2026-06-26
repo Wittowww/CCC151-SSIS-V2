@@ -154,8 +154,8 @@ class CollegeTable(QWidget):
         confirm = QMessageBox.question(
             self, "Confirm Delete",
             f"Are you sure you want to delete '{college_name}'?\n\n"
-            "Warning: This will also delete all associated Programs and "
-            "unassign Students!",
+            "Warning: Associated Programs will be unassigned (N/A) and "
+            "Students will remain in their Programs.",
             QMessageBox.Yes | QMessageBox.No
         )
         if confirm == QMessageBox.Yes:

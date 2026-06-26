@@ -66,7 +66,7 @@ def get_all_program():
                 p.program_name,
                 c.college_code
             FROM program p
-            JOIN college c ON p.college_code = c.college_code
+            LEFT JOIN college c ON p.college_code = c.college_code
         """)
         return cursor.fetchall()
     finally:
@@ -130,7 +130,7 @@ def get_all_students():
                 s.last_name,
                 s.gender,
                 s.year,
-                p.program_code
+                COALESCE(s.program_code, 'N/A') AS program_code
             FROM students s
             LEFT JOIN program p ON s.program_code = p.program_code
         """)

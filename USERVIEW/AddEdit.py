@@ -395,6 +395,7 @@ class EditStudentDialog(QDialog):
         student_form.addRow("Last Name:",  self.Input_lastName)
         student_form.addRow("Gender:",     self.Choose_gender)
         student_form.addRow("Year:",       self.Input_year)
+        student_form.addRow("College:",    self.Choose_college)
         student_form.addRow("Program:",    self.program_combo)
         student_layout.addLayout(student_form)
  

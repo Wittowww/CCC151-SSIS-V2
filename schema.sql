@@ -11,9 +11,9 @@ CREATE TABLE program (
     id INT AUTO_INCREMENT PRIMARY KEY,
     program_code VARCHAR(20),
     program_name VARCHAR(50),
-    college_code VARCHAR(20),
+    college_code VARCHAR(20) NULL,
     UNIQUE (program_code),
-    FOREIGN KEY(college_code) REFERENCES college(college_code) ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY(college_code) REFERENCES college(college_code) ON DELETE SET NULL ON UPDATE CASCADE
 );
 
 CREATE TABLE students (
