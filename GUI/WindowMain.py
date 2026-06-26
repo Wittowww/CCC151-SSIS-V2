@@ -141,7 +141,40 @@ class mainApp(QMainWindow):
         self.programTablePage.load_programTable() 
     def showCollegeTable(self):
         self.TablePage.setCurrentIndex(2)
-    
+        self.collegesTablePage.load_collegeTable()  
+
+    def update_sortBox(self, index):
+        self.sortBox.blockSignals(True) 
+        self.sortBox.clear()
+        if index == 0:
+            self.sortBox.addItems(["Sort by...", "Student ID", "First Name", "Last Name", "Gender", "Year", "Program"])
+        elif index == 1:
+            self.sortBox.addItems(["Sort by...", "Program Code", "Program Name", "College Code"])
+        elif index == 2:
+            self.sortBox.addItems(["Sort by...", "College Name", "College Code"])
+        self.sortBox.blockSignals(False)
+        self.searchBar.clear()
+
+    def handle_search(self, text):
+        index = self.TablePage.currentIndex()
+        if index == 0:
+            self.studentsTablePage.search(text)
+        elif index == 1:
+            self.programTablePage.search(text)
+        elif index == 2:
+            self.collegesTablePage.search(text)
+
+    def handle_sort(self, sort_index):
+        if sort_index == 0:
+            return 
+        index = self.TablePage.currentIndex()
+        col = sort_index - 1 
+        if index == 0:
+            self.studentsTablePage.sort(col)
+        elif index == 1:
+            self.programTablePage.sort(col)
+        elif index == 2:
+            self.collegesTablePage.sort(col)
 
     # Makes sure add pop up Dialog opens when button clicked
     def Add_popup(self):
