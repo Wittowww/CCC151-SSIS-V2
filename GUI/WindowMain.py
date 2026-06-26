@@ -28,7 +28,7 @@ class mainApp(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Simple Student Information Management V2")
-        self.setFixedSize(1200, 700)
+        self.setFixedSize(1200, 800)
 
         icon_path = os.path.join(BASE_DIR, "StudentInfo ICON.png")
         self.setWindowIcon(QIcon(icon_path))
@@ -45,13 +45,13 @@ class mainApp(QMainWindow):
 
         #Label / name 
         TITLElable = QLabel("Simple System Information System")
-        TITLElable.setFixedHeight(70)
+        TITLElable.setFixedHeight(50)
 
         #Page Picker for Tables
 
         #layout thingsz
         upperBox_container = QWidget()
-        upperBox_container.setFixedHeight(70)
+        upperBox_container.setFixedHeight(50)
 
         upperBox = QHBoxLayout(upperBox_container)
 
@@ -84,7 +84,7 @@ class mainApp(QMainWindow):
 
         #Layout for the table pages
         self.TablePage = QStackedWidget()
-        self.TablePage.setMinimumHeight(580)
+        self.TablePage.setMinimumHeight(550)
 
         self.studentsTablePage = StudentsTable()
         self.programTablePage = ProgramTable()
@@ -109,43 +109,13 @@ class mainApp(QMainWindow):
     # Makes sure the is shown when table buttons clicked
     def showStudentsTable(self):
         self.TablePage.setCurrentIndex(0)
+        self.studentsTablePage.load_studentTable()
     def showProgramTable(self):
         self.TablePage.setCurrentIndex(1)
+        self.programTablePage.load_programTable() 
     def showCollegeTable(self):
         self.TablePage.setCurrentIndex(2)
-
-    def update_sortBox(self, index):
-        self.sortBox.blockSignals(True) 
-        self.sortBox.clear()
-        if index == 0:
-            self.sortBox.addItems(["Sort by...", "Student ID", "First Name", "Last Name", "Gender", "Year", "Program"])
-        elif index == 1:
-            self.sortBox.addItems(["Sort by...", "Program Code", "Program Name", "College Code"])
-        elif index == 2:
-            self.sortBox.addItems(["Sort by...", "College Name", "College Code"])
-        self.sortBox.blockSignals(False)
-        self.searchBar.clear()
-
-    def handle_search(self, text):
-        index = self.TablePage.currentIndex()
-        if index == 0:
-            self.studentsTablePage.search(text)
-        elif index == 1:
-            self.programTablePage.search(text)
-        elif index == 2:
-            self.collegesTablePage.search(text)
-
-    def handle_sort(self, sort_index):
-        if sort_index == 0:
-            return 
-        index = self.TablePage.currentIndex()
-        col = sort_index - 1 
-        if index == 0:
-            self.studentsTablePage.sort(col)
-        elif index == 1:
-            self.programTablePage.sort(col)
-        elif index == 2:
-            self.collegesTablePage.sort(col)
+    
 
     # Makes sure add pop up Dialog opens when button clicked
     def Add_popup(self):
