@@ -29,6 +29,7 @@ class CollegeTable(QWidget):
 
 
         self.collegeTable = QTableWidget()
+        self.collegeTable.setAlternatingRowColors(True)
         self.collegeTable.setColumnCount(2)
         self.collegeTable.setHorizontalHeaderLabels(["College Name", "College Code"])
         self.collegeTable.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
@@ -104,8 +105,12 @@ class CollegeTable(QWidget):
         self.current_page = 0  
         self.refresh_page()
 
-    def sort(self, col):
-        self.collegeTable.sortItems(col, Qt.AscendingOrder)
+    def sort(self, index):
+        keys = ["college_code", "college_name"]
+        key = keys[index]
+        self.filtered_data.sort(key=lambda c: str(c[key] or "").lower())
+        self.current_page = 0
+        self.refresh_page()
 
     def show_contextMenu(self, postion):
         AE_menu = QMenu()
@@ -170,6 +175,7 @@ class ProgramTable(QWidget):
         program_Layout = QVBoxLayout()
 
         self.programTable = QTableWidget()
+        self.programTable.setAlternatingRowColors(True)
         self.programTable.setColumnCount(3)
         self.programTable.setHorizontalHeaderLabels(["Program Code", "Program Name", "College ID"])
         self.programTable.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
@@ -247,8 +253,12 @@ class ProgramTable(QWidget):
         self.current_page = 0        
         self.refresh_page()
 
-    def sort(self, col):
-        self.programTable.sortItems(col, Qt.AscendingOrder)
+    def sort(self, index):
+        keys = ["program_code", "program_name", "college_code"]
+        key = keys[index]
+        self.filtered_data.sort(key=lambda p: str(p[key] or "").lower())
+        self.current_page = 0
+        self.refresh_page()
  
     def show_contextMenu(self, postion):
         AE_menu = QMenu()
@@ -312,6 +322,7 @@ class StudentsTable(QWidget):
         student_Layout = QVBoxLayout()
 
         self.studentTable = QTableWidget()
+        self.studentTable.setAlternatingRowColors(True) 
         self.studentTable.setColumnCount(6)
         self.studentTable.setHorizontalHeaderLabels(["Student ID", "First Name", "Last Name", "Gender", "Year", "Program"])
         self.studentTable.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
@@ -396,8 +407,12 @@ class StudentsTable(QWidget):
         self.current_page = 0      
         self.refresh_page()
  
-    def sort(self, col):
-        self.studentTable.sortItems(col, Qt.AscendingOrder)
+    def sort(self, index):
+        keys = ["student_id", "first_name", "last_name", "gender", "program_code", "year"]
+        key = keys[index]
+        self.filtered_data.sort(key=lambda s: str(s[key] or "").lower())
+        self.current_page = 0
+        self.refresh_page()
         
     def show_contextMenu(self, postion):
         AE_menu = QMenu()

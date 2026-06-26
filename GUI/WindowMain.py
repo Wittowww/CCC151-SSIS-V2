@@ -7,6 +7,7 @@ from PySide6.QtWidgets import (
     )
 from PySide6.QtGui import QIcon
 from PySide6.QtCore import Qt
+from PySide6.QtGui import QScreen
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -37,6 +38,7 @@ class mainApp(QMainWindow):
         self.setCentralWidget(central_widget)
 
         self.main_UI(central_widget)
+        self.center_on_screen() 
         self.show()
 
 
@@ -105,6 +107,30 @@ class mainApp(QMainWindow):
         layout_Main.addWidget(upperBox_container)
         layout_Main.addWidget(self.TablePage)
 
+    def center_on_screen(self):
+        screen = self.screen().availableGeometry()
+        window_geo = self.frameGeometry()
+        window_geo.moveCenter(screen.center())
+        self.move(window_geo.topLeft())
+
+    def handle_search(self, text):
+        current_widget = self.TablePage.currentWidget()
+        if hasattr(current_widget, "search"):
+            current_widget.search(text)
+
+    def update_sortBox(self, index):
+        self.sortBox.clear()
+        if index == 0: 
+            self.sortBox.addItems(["ID", "First Name", "Last Name","Gender", "Program", "Year Level"])
+        elif index == 1: 
+            self.sortBox.addItems(["Program Code", "Program Name", "College"])
+        elif index == 2:
+            self.sortBox.addItems(["College Code", "College Name"])
+
+    def handle_sort(self, index):
+        current_widget = self.TablePage.currentWidget()
+        if hasattr(current_widget, "sort"):
+            current_widget.sort(index)
 
     # Makes sure the is shown when table buttons clicked
     def showStudentsTable(self):
