@@ -138,7 +138,7 @@ class AddProgramDialog(QDialog):
         self.Choose_college = QComboBox()
         self.Choose_college.addItem("Select College", None)
         for c in get_all_college():
-            self.Choose_college.addItem(c["college_code"], c["college_code"])
+            self.Choose_college.addItem(c["college_name"], c["college_code"])
  
         form.addRow("Program Name:", self.Input_programName)
         form.addRow("Program Code:", self.Input_programCode)
@@ -199,7 +199,7 @@ class EditProgramDialog(QDialog):
         self.Choose_college = QComboBox()
         self.Choose_college.addItem("Select College", None)
         for c in get_all_college():
-            self.Choose_college.addItem(c["college_code"], c["college_code"])
+            self.Choose_college.addItem(c["college_name"], c["college_code"])
  
         # Pre-select the current college
         idx = self.Choose_college.findData(college_code)
