@@ -26,21 +26,7 @@ def delete_college(college_id):
     connection = GetConnection()
     try:
         cursor = connection.cursor()
-
-        cursor.execute("SELECT college_code FROM college WHERE id = %s", (college_id,))
-        row = cursor.fetchone()
-        if not row:
-            return False
-        
-        college_code = row[0]
-
-        cursor.execute(
-            "UPDATE program SET college_code = 'N/A' WHERE college_code = %s",
-            (college_code,)
-        )
-
         cursor.execute("DELETE FROM college WHERE id = %s", (college_id,))
-
         connection.commit()
         return cursor.rowcount > 0
     except Exception as e:
@@ -54,15 +40,14 @@ def update_college(college_id, college_name, college_code):
     connection = GetConnection()
     try:
         cursor = connection.cursor()
-        cursor.execute (
+
+        cursor.execute(
             """UPDATE college 
-            SET 
-            college_name = %s, 
-            college_code = %s 
-            WHERE 
-            id = %s """,
+            SET college_name = %s, college_code = %s 
+            WHERE id = %s""",
             (college_name, college_code, college_id)
-            )
+        )
+
         connection.commit()
     finally:
         connection.close()
@@ -118,14 +103,11 @@ def update_program(program_name, program_code, college_code, program_id):
         cursor = connection.cursor()
         cursor.execute (
             """UPDATE program 
-            SET 
-            program_name = %s, 
-            program_code = %s,
-            college_code = %s
-            WHERE 
-            id = %s """,
+            SET program_name = %s, program_code = %s, college_code = %s 
+            WHERE id = %s""",
             (program_name, program_code, college_code, program_id)
-            )
+        )
+
         connection.commit()
     finally:
         connection.close()
